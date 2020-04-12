@@ -1,0 +1,7 @@
+error: custom attribute panicked
+  --> $DIR/unexpected_item.rs:15:1
+   |
+15 | #[use_ast]
+   | ^^^^^^^^^^
+   |
+   = help: message: only methods are supported, consider moving Const(ImplItemConst { attrs: [], vis: Inherited, defaultness: None, const_token: Const, ident: Ident { ident: "XXX", span: #0 bytes(247..250) }, colon_token: Colon, ty: Path(TypePath { qself: None, path: Path { leading_colon: None, segments: [PathSegment { ident: Ident { ident: "usize", span: #0 bytes(252..257) }, arguments: None }] } }), eq_token: Eq, expr: Lit(ExprLit { attrs: [], lit: Int(LitInt { token: 0 }) }), semi_token: Semi }) to another impl block
