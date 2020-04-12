@@ -5,3 +5,12 @@ error: custom attribute panicked
    | ^^^^^^^^^^
    |
    = help: message: not implemented: Generics and lifetimes are currently not supported (yet?). Please fill an issue at `https://github.com/wafflelapkin/arbitrary_wrappers` describing your use case.
+
+error[E0599]: no method named `method` found for struct `Wrapper<Type, {integer}>` in the current scope
+  --> $DIR/unimplemented_generics.rs:7:33
+   |
+7  |     assert_eq!(Wrapper(Type, 0).method(), 0);
+   |                                 ^^^^^^ method not found in `Wrapper<Type, {integer}>`
+...
+10 | struct Wrapper<T, U>(T, U);
+   | --------------------------- method `method` not found for this

@@ -5,3 +5,12 @@ error: custom attribute panicked
    | ^^^^^^^^^^
    |
    = help: message: Expected non-static method, found method with 0 arguments. Consider moving this function to another impl block.
+
+error[E0599]: no method named `method` found for struct `Wrapper<Type>` in the current scope
+  --> $DIR/expected_non_static_method.rs:8:33
+   |
+8  |     assert_eq!(Wrapper(0, Type).method(), 0);
+   |                                 ^^^^^^ method not found in `Wrapper<Type>`
+...
+11 | struct Wrapper<T>(i32, T);
+   | -------------------------- method `method` not found for this
