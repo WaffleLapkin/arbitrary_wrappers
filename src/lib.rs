@@ -54,7 +54,7 @@ fn ui() {
 /// }
 /// ```
 ///
-/// This will became:
+/// This will become:
 ///
 /// ```
 /// #![feature(arbitrary_self_types)]
