@@ -12,7 +12,7 @@ struct Wrapper<T>(i32, T);
 
 struct Type;
 
-#[use_ast]
+#[use_ast(Type)]
 impl Wrapper<Type> {
     fn method() -> i32 {
         0

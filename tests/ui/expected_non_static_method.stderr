@@ -1,8 +1,8 @@
 error: custom attribute panicked
   --> $DIR/expected_non_static_method.rs:15:1
    |
-15 | #[use_ast]
-   | ^^^^^^^^^^
+15 | #[use_ast(Type)]
+   | ^^^^^^^^^^^^^^^^
    |
    = help: message: Expected non-static method, found method with 0 arguments. Consider moving this function to another impl block.
 

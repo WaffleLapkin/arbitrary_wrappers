@@ -11,7 +11,7 @@ struct Wrapper<T, U>(T, U);
 
 struct Type;
 
-#[use_ast]
+#[use_ast(Type)]
 impl<U> Wrapper<Type, U> {
     fn method(self) -> U {
         self.1

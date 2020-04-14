@@ -10,7 +10,6 @@ extern crate proc_macro;
 use proc_macro::TokenStream;
 use proc_macro2::Span;
 use syn::{
-    parse::{Parse, ParseStream},
     FnArg, Ident, ImplItem, ImplItemMethod, Pat, PatIdent, PatType, Receiver, Signature, Token,
     TypeReference,
 };
@@ -40,7 +39,7 @@ fn ui() {
 /// struct Type;
 /// struct ReturnTy;
 ///
-/// #[arbitrary_wrappers::use_ast]
+/// #[arbitrary_wrappers::use_ast(Type)]
 /// impl Wrapper<Type> {
 ///     fn method_a(self) -> ReturnTy {
 ///         /* body */
@@ -89,7 +88,7 @@ fn ui() {
 ///
 /// [`cfg_attr`]: https://doc.rust-lang.org/reference/conditional-compilation.html#the-cfg_attr-attribute
 #[proc_macro_attribute]
-pub fn use_ast(_args: TokenStream, input: TokenStream) -> TokenStream {
+pub fn use_ast(args: TokenStream, input: TokenStream) -> TokenStream {
     let syn::ItemImpl {
         attrs,
         defaultness: _, // inherent impl can't be default
@@ -139,6 +138,7 @@ pub fn use_ast(_args: TokenStream, input: TokenStream) -> TokenStream {
                  block
              }
          ) => {
+             let (_, generics, where_c) = generics.split_for_impl();
              let slf = inputs
                  .first_mut()
                  .expect(
@@ -193,7 +193,7 @@ pub fn use_ast(_args: TokenStream, input: TokenStream) -> TokenStream {
              let inputs = inputs.into_iter();
              quote::quote! {
                 #( #attrs )*
-                #vis #defaultness #constness #asyncness #unsafety #abi #fn_token #ident #generics ( #( #inputs )* ) #output #block
+                #vis #defaultness #constness #asyncness #unsafety #abi #fn_token #ident #generics ( #( #inputs ),* ) #output #where_c #block
              }
          },
          item => {
@@ -204,9 +204,7 @@ pub fn use_ast(_args: TokenStream, input: TokenStream) -> TokenStream {
          }
     });
 
-    let Wrapped {
-        wrapped: self_ty, ..
-    } = syn::parse2(quote::quote! { #full_ty }).unwrap();
+    let self_ty = syn::parse_macro_input!(args as syn::Type);
 
     let res = quote::quote! {
         #( #attrs )*
@@ -216,23 +214,4 @@ pub fn use_ast(_args: TokenStream, input: TokenStream) -> TokenStream {
     };
 
     res.into()
-}
-
-#[allow(dead_code)] // for never-used fields
-struct Wrapped {
-    wrapper: Ident,
-    a: Token![<],
-    wrapped: Ident,
-    b: Token![>],
-}
-
-impl Parse for Wrapped {
-    fn parse(input: ParseStream) -> syn::Result<Self> {
-        Ok(Wrapped {
-            wrapper: input.parse()?,
-            a: input.parse()?,
-            wrapped: input.parse()?,
-            b: input.parse()?,
-        })
-    }
 }
